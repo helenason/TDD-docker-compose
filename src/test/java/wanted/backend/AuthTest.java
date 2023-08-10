@@ -1,4 +1,4 @@
-package wanted.backend.Auth;
+package wanted.backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
