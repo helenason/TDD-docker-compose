@@ -9,11 +9,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Builder
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,9 @@ public class Member {
     private String email;
 
     @NotNull
-    private String password;
+    private String token;
 
+    public void updateToken(String token) {
+        this.token = token;
+    }
 }
