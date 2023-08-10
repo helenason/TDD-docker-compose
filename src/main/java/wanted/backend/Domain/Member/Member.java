@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import wanted.backend.Domain.Board.Board;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -25,5 +28,8 @@ public class Member {
 
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "writer")
+    private List<Board> boardList = new ArrayList<>();
 
 }
