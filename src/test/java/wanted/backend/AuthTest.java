@@ -17,9 +17,12 @@ import wanted.backend.Domain.Member.Member;
 import wanted.backend.Domain.Member.TokenDto;
 import wanted.backend.Domain.ResponseDto;
 import wanted.backend.Jwt.JwtUtil;
+import wanted.backend.Repository.BoardRepository;
 import wanted.backend.Repository.MemberRepository;
 import wanted.backend.Repository.RefreshTokenRepository;
 import wanted.backend.Service.AuthService;
+
+import java.util.Objects;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,6 +42,9 @@ public class AuthTest {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
@@ -46,6 +52,8 @@ public class AuthTest {
 
     @BeforeEach
     void setUp() {
+        boardRepository.deleteAll();
+        refreshTokenRepository.deleteAll();
         memberRepository.deleteAll();
     }
 
@@ -60,7 +68,6 @@ public class AuthTest {
         Member findMember = memberRepository.findAll().get(0);
         Assertions.assertEquals(memberRepository.count(), 1);
         Assertions.assertEquals(findMember.getEmail(), authDto.getEmail());
-
     }
 
     @Test
@@ -73,7 +80,6 @@ public class AuthTest {
 
         Assertions.assertEquals(responseDto.getMessage(), "invalid email");
         Assertions.assertEquals(memberRepository.count(), 0);
-
     }
 
     @Test
@@ -86,7 +92,6 @@ public class AuthTest {
 
         Assertions.assertEquals(responseDto.getMessage(), "invalid password");
         Assertions.assertEquals(memberRepository.count(), 0);
-
     }
 
     @Test
@@ -124,8 +129,8 @@ public class AuthTest {
                     .andReturn();
 
         // then
-        String cookieAccessToken = result.getResponse().getCookie("Access_Token").getValue();
-        String cookieRefreshToken = result.getResponse().getCookie("Refresh_Token").getValue();
+        String cookieAccessToken = Objects.requireNonNull(result.getResponse().getCookie("Access_Token")).getValue();
+        String cookieRefreshToken = Objects.requireNonNull(result.getResponse().getCookie("Refresh_Token")).getValue();
 
         String content = result.getResponse().getContentAsString();
         ResponseDto responseDto = objectMapper.readValue(content, ResponseDto.class);
@@ -135,6 +140,7 @@ public class AuthTest {
         Assertions.assertEquals(responseToken.getAccessToken(), cookieAccessToken);
         Assertions.assertEquals(responseToken.getRefreshToken(), cookieRefreshToken);
         Assertions.assertEquals(refreshTokenRepository.count(), 1);
+        Assertions.assertEquals(jwtUtil.getEmailFromToken(cookieAccessToken), authDto.getEmail()); // Token 주인 식별
     }
 
     @Test
