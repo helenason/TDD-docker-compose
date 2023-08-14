@@ -15,6 +15,7 @@ import wanted.backend.Repository.BoardRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,31 @@ public class BoardService {
             result.add(item);
         }
         responseDto.setData(result);
+
+        return responseDto;
+    }
+
+    public ResponseDto showPost(long id) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        Optional<Board> postOp = boardRepository.findById(id);
+
+        if (postOp.isEmpty()) {
+            responseDto.setStatus(HttpStatus.BAD_REQUEST);
+            responseDto.setMessage("invalid post");
+            return responseDto;
+        }
+
+        Board post = postOp.get();
+
+        responseDto.setData(BoardDto.Response.builder()
+                .id(post.getId())
+                .date(post.getCreatedAt())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .writer(post.getWriter().getEmail())
+                .build());
 
         return responseDto;
     }

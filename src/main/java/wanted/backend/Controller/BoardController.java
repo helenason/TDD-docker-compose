@@ -37,4 +37,13 @@ public class BoardController {
         return ResponseEntity.status(responseDto.getStatus())
                 .body(responseDto);
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ResponseDto> showPost(@PathVariable long id) {
+
+        ResponseDto responseDto = boardService.showPost(id);
+
+        return ResponseEntity.status(responseDto.getStatus())
+                .body(responseDto);
+    }
 }
