@@ -58,4 +58,15 @@ public class BoardController {
         return ResponseEntity.status(responseDto.getStatus())
                 .body(responseDto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto> deletePost(@PathVariable long id,
+                                                  @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+
+        Member member = memberPrincipal.getMember();
+        ResponseDto responseDto = boardService.deletePost(id, member);
+
+        return ResponseEntity.status(responseDto.getStatus())
+                .body(responseDto);
+    }
 }

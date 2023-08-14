@@ -98,7 +98,7 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseDto updatePost(long id, BoardDto.Request boardDto, Member member) {
+    public ResponseDto updatePost(long id, BoardDto.Request boardDto, Member loginMember) {
 
         ResponseDto responseDto = new ResponseDto();
 
@@ -112,7 +112,7 @@ public class BoardService {
 
         Board post = postOp.get();
 
-        if (!post.getWriter().getId().equals(member.getId())) {
+        if (!post.getWriter().getId().equals(loginMember.getId())) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
             responseDto.setMessage("not writer");
             return responseDto;
@@ -121,6 +121,33 @@ public class BoardService {
         post.updateBoard(boardDto.getTitle(), boardDto.getContent());
 
         responseDto.setStatus(HttpStatus.CREATED);
+
+        return responseDto;
+    }
+
+    public ResponseDto deletePost(long id, Member loginMember) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        Optional<Board> postOp = boardRepository.findById(id);
+
+        if (postOp.isEmpty()) {
+            responseDto.setStatus(HttpStatus.BAD_REQUEST);
+            responseDto.setMessage("invalid post");
+            return responseDto;
+        }
+
+        Board post = postOp.get();
+
+        if (!post.getWriter().getId().equals(loginMember.getId())) {
+            responseDto.setStatus(HttpStatus.BAD_REQUEST);
+            responseDto.setMessage("not writer");
+            return responseDto;
+        }
+
+        boardRepository.delete(post);
+
+        responseDto.setStatus(HttpStatus.NO_CONTENT);
 
         return responseDto;
     }
