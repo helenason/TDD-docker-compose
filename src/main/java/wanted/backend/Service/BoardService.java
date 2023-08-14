@@ -13,6 +13,7 @@ import wanted.backend.Domain.Member.Member;
 import wanted.backend.Domain.ResponseDto;
 import wanted.backend.Repository.BoardRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,22 +49,22 @@ public class BoardService {
     public ResponseDto listPosts(Integer page) {
 
         ResponseDto responseDto = new ResponseDto();
-        BoardListDto result = new BoardListDto();
+        List<BoardListDto> result = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(page - 1, 3, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(
+                page - 1, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         List<Board> postList = boardRepository.findAll(pageable).getContent();
 
         for (Board post : postList) {
-             BoardListDto.Item item = BoardListDto.Item.builder()
+             BoardListDto item = BoardListDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .date(post.getCreatedAt())
                     .writer(post.getWriter().getEmail())
                     .build();
-            result.getItems().add(item);
+            result.add(item);
         }
-
         responseDto.setData(result);
 
         return responseDto;
