@@ -23,6 +23,8 @@ import java.util.List;
 @DisplayName("Board Test")
 public class BoardTest {
 
+    Member loginMember;
+
     @Autowired
     private BoardService boardService;
 
@@ -39,39 +41,35 @@ public class BoardTest {
     void setUp() {
         boardRepository.deleteAll();
         memberRepository.deleteAll();
+
+        loginMember = memberRepository.save(
+                Member.builder()
+                        .email("test@gmail.com")
+                        .password("test123!")
+                        .build());
     }
 
     @Test
     @DisplayName("게시판 작성 - 성공")
     void write() {
 
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
         BoardDto.Request boardDto = new BoardDto.Request("title", "content");
 
-        boardService.writePost(boardDto, member);
+        boardService.writePost(boardDto, loginMember);
 
         Board findBoard = boardRepository.findAll().get(0);
         Assertions.assertEquals(boardRepository.count(), 1);
         Assertions.assertEquals(findBoard.getTitle(), "title");
-        Assertions.assertEquals(findBoard.getWriter().getId(), member.getId());
+        Assertions.assertEquals(findBoard.getWriter().getId(), loginMember.getId());
     }
 
     @Test
     @DisplayName("게시판 작성 - 데이터 불충분")
     void writeEmptyData() {
 
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
         BoardDto.Request boardDto = new BoardDto.Request(null, "content");
 
-        ResponseDto responseDto = boardService.writePost(boardDto, member);
+        ResponseDto responseDto = boardService.writePost(boardDto, loginMember);
 
         Assertions.assertEquals(boardRepository.count(), 0);
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
@@ -82,16 +80,10 @@ public class BoardTest {
     void list() {
 
         // given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
-
         int total_size = 23;
         for (int i = 0; i < total_size; i ++) {
             BoardDto.Request boardDto = new BoardDto.Request("제목" + (i + 1), "내용" + (i + 1));
-            boardService.writePost(boardDto, member);
+            boardService.writePost(boardDto, loginMember);
         }
 
         // when
@@ -114,16 +106,10 @@ public class BoardTest {
     void listEmpty() {
 
         // given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
-
         int total_size = 10;
         for (int i = 0; i < total_size; i ++) {
             BoardDto.Request boardDto = new BoardDto.Request("제목" + (i + 1), "내용" + (i + 1));
-            boardService.writePost(boardDto, member);
+            boardService.writePost(boardDto, loginMember);
         }
 
         // when
@@ -142,14 +128,8 @@ public class BoardTest {
     void show() {
 
         // given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
-
         BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
-        boardService.writePost(boardDto, member);
+        boardService.writePost(boardDto, loginMember);
 
         // when
         Long postId = boardRepository.findAll().get(0).getId();
@@ -168,14 +148,8 @@ public class BoardTest {
     void showInvalid() {
 
         // given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .email("test@gmail.com")
-                        .password("test123!")
-                        .build());
-
         BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
-        boardService.writePost(boardDto, member);
+        boardService.writePost(boardDto, loginMember);
 
         // when
         long postId = boardRepository.findAll().get(0).getId() + 12345L;
