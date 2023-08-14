@@ -30,39 +30,39 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = jwtUtil.getCookieToken(request, "Access");
         String refreshToken = jwtUtil.getCookieToken(request, "Refresh");
 
-        if(accessToken != null) {
+        if (accessToken != null) {
 
             if (jwtUtil.tokenValid(accessToken)) {
 
                 log.info("Access Token 유효");
 
                 setAuthentication(accessToken);
+            }
 
-            } else if (refreshToken != null) {
+        } else if (refreshToken != null) {
 
-                log.info("Access Token 만료");
+            log.info("Access Token 만료");
 
-                boolean isRefreshTokenValid = jwtUtil.refreshTokenValid(refreshToken);
+            boolean isRefreshTokenValid = jwtUtil.refreshTokenValid(refreshToken);
 
-                if (isRefreshTokenValid) {
+            if (isRefreshTokenValid) {
 
-                    log.info("Access Token 만료 + Refresh Token 유효");
+                log.info("Access Token 만료 + Refresh Token 유효");
 
-                    String loginEmail = jwtUtil.getEmailFromToken(refreshToken);
-                    String newAccessToken = jwtUtil.createToken(loginEmail, "Access");
+                String loginEmail = jwtUtil.getEmailFromToken(refreshToken);
+                String newAccessToken = jwtUtil.createToken(loginEmail, "Access");
 
-                    jwtUtil.setCookieAccessToken(response, newAccessToken);
-                    setAuthentication(newAccessToken);
+                jwtUtil.setCookieAccessToken(response, newAccessToken);
+                setAuthentication(newAccessToken);
 
-                } else {
-                    log.info("Access Token 만료 + Refresh Token 만료");
+            } else {
+                log.info("Access Token 만료 + Refresh Token 만료");
 
-                    refreshTokenRepository.findByToken(refreshToken).ifPresent(refreshTokenRepository::delete);
+                refreshTokenRepository.findByToken(refreshToken).ifPresent(refreshTokenRepository::delete);
 
-                    jwtUtil.invalidTokenResponse(response);
+                jwtUtil.invalidTokenResponse(response);
 
-                    return;
-                }
+                return;
             }
         }
         filterChain.doFilter(request, response);
