@@ -203,4 +203,44 @@ public class BoardTest {
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
         Assertions.assertEquals(responseDto.getMessage(), "not writer");
     }
+
+    @Test
+    @DisplayName("게시판 삭제 - 성공")
+    void delete() {
+
+        // given
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, loginMember);
+
+        // when
+        long postId = boardRepository.findAll().get(0).getId();
+        ResponseDto responseDto = boardService.deletePost(postId, loginMember);
+
+        // then
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.NO_CONTENT);
+        Assertions.assertEquals(boardRepository.count(), 0);
+    }
+
+    @Test
+    @DisplayName("게시판 삭제 - 작성자 아님")
+    void deleteNotWriter() {
+
+        // given
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, loginMember);
+
+        Member guestMember = memberRepository.save(
+                Member.builder()
+                        .email("guest@gmail.com")
+                        .password("guest123!")
+                        .build());
+
+        // when
+        long postId = boardRepository.findAll().get(0).getId();
+        ResponseDto responseDto = boardService.deletePost(postId, guestMember);
+
+        // then
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(responseDto.getMessage(), "not writer");
+    }
 }
