@@ -38,10 +38,22 @@ public class BoardController {
                 .body(responseDto);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> showPost(@PathVariable long id) {
 
         ResponseDto responseDto = boardService.showPost(id);
+
+        return ResponseEntity.status(responseDto.getStatus())
+                .body(responseDto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseDto> updatePost(@PathVariable long id,
+                                                  @RequestBody BoardDto.Request boardDto,
+                                                  @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+
+        Member member = memberPrincipal.getMember();
+        ResponseDto responseDto = boardService.updatePost(id, boardDto, member);
 
         return ResponseEntity.status(responseDto.getStatus())
                 .body(responseDto);

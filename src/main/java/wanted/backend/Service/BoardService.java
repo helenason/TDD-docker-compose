@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wanted.backend.Domain.Board.Board;
 import wanted.backend.Domain.Board.BoardDto;
 import wanted.backend.Domain.Board.BoardListDto;
@@ -92,6 +93,34 @@ public class BoardService {
                 .content(post.getContent())
                 .writer(post.getWriter().getEmail())
                 .build());
+
+        return responseDto;
+    }
+
+    @Transactional
+    public ResponseDto updatePost(long id, BoardDto.Request boardDto, Member member) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        Optional<Board> postOp = boardRepository.findById(id);
+
+        if (postOp.isEmpty()) {
+            responseDto.setStatus(HttpStatus.BAD_REQUEST);
+            responseDto.setMessage("invalid post");
+            return responseDto;
+        }
+
+        Board post = postOp.get();
+
+        if (!post.getWriter().getId().equals(member.getId())) {
+            responseDto.setStatus(HttpStatus.BAD_REQUEST);
+            responseDto.setMessage("not writer");
+            return responseDto;
+        }
+
+        post.updateBoard(boardDto.getTitle(), boardDto.getContent());
+
+        responseDto.setStatus(HttpStatus.CREATED);
 
         return responseDto;
     }
