@@ -159,4 +159,48 @@ public class BoardTest {
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
         Assertions.assertEquals(responseDto.getMessage(), "invalid post");
     }
+
+    @Test
+    @DisplayName("게시판 수정 - 성공")
+    void update() {
+
+        // given
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, loginMember);
+        BoardDto.Request updateDto = new BoardDto.Request("수정 제목", "수정 내용");
+
+        // when
+        long postId = boardRepository.findAll().get(0).getId();
+        ResponseDto responseDto = boardService.updatePost(postId, updateDto, loginMember);
+
+        // then
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.CREATED);
+        Assertions.assertEquals(boardRepository.findById(postId).get().getTitle(), "수정 제목");
+        Assertions.assertEquals(boardRepository.findById(postId).get().getContent(), "수정 내용");
+    }
+
+    @Test
+    @DisplayName("게시판 수정 - 작성자 아님")
+    void updateNotWriter() {
+
+        // given
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, loginMember);
+
+        Member guestMember = memberRepository.save(
+                Member.builder()
+                        .email("guest@gmail.com")
+                        .password("guest123!")
+                        .build());
+
+        BoardDto.Request updateDto = new BoardDto.Request("수정 제목", "수정 내용");
+
+        // when
+        long postId = boardRepository.findAll().get(0).getId();
+        ResponseDto responseDto = boardService.updatePost(postId, updateDto, guestMember);
+
+        // then
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(responseDto.getMessage(), "not writer");
+    }
 }
