@@ -136,4 +136,53 @@ public class BoardTest {
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.OK);
         Assertions.assertEquals(data.size(), 0);
     }
+
+    @Test
+    @DisplayName("게시판 상세 조회 - 성공")
+    void show() {
+
+        // given
+        Member member = memberRepository.save(
+                Member.builder()
+                        .email("test@gmail.com")
+                        .password("test123!")
+                        .build());
+
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, member);
+
+        // when
+        Long postId = boardRepository.findAll().get(0).getId();
+        ResponseDto responseDto = boardService.showPost(postId);
+
+        // then
+        BoardDto.Response data = (BoardDto.Response) responseDto.getData();
+
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.OK);
+        Assertions.assertEquals(data.getTitle(), boardDto.getTitle());
+        Assertions.assertEquals(data.getContent(), boardDto.getContent());
+    }
+
+    @Test
+    @DisplayName("게시판 상세 조회 - 없는 글")
+    void showInvalid() {
+
+        // given
+        Member member = memberRepository.save(
+                Member.builder()
+                        .email("test@gmail.com")
+                        .password("test123!")
+                        .build());
+
+        BoardDto.Request boardDto = new BoardDto.Request("제목", "내용");
+        boardService.writePost(boardDto, member);
+
+        // when
+        long postId = boardRepository.findAll().get(0).getId() + 12345L;
+        ResponseDto responseDto = boardService.showPost(postId);
+
+        // then
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(responseDto.getMessage(), "invalid post");
+    }
 }
