@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import wanted.backend.Domain.Board.BoardDto;
 import wanted.backend.Domain.Member.Member;
 import wanted.backend.Domain.Member.MemberPrincipal;
@@ -26,6 +24,15 @@ public class BoardController {
 
         Member member = memberPrincipal.getMember();
         ResponseDto responseDto = boardService.writePost(boardDto, member);
+
+        return ResponseEntity.status(responseDto.getStatus())
+                .body(responseDto);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseDto> listPosts(@RequestParam(required = false, defaultValue = "1") Integer page) {
+
+        ResponseDto responseDto = boardService.listPosts(page);
 
         return ResponseEntity.status(responseDto.getStatus())
                 .body(responseDto);
