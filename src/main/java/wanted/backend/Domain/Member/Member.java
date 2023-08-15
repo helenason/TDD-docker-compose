@@ -1,6 +1,5 @@
 package wanted.backend.Domain.Member;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Member {
 
     @Id
@@ -31,5 +28,11 @@ public class Member {
 
     @OneToMany(mappedBy = "writer")
     private List<Board> boardList = new ArrayList<>();
+
+    @Builder
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
 }
