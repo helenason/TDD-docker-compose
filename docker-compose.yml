@@ -1,0 +1,29 @@
+version : "3"
+services:
+  db:
+    container_name: wanted_db
+    image: mysql:8.0.32
+    environment:
+      MYSQL_DATABASE: wanted_db
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - ./db/data:/var/lib/mysql:rw
+    ports:
+      - 3306:3306
+    restart: always
+  wanted:
+    container_name: wanted_app
+    image: openjdk:11-jdk
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/wanted
+    working_dir: /wanted
+    command: ["./gradlew", "bootrun"]
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/wanted_db?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    restart: always
