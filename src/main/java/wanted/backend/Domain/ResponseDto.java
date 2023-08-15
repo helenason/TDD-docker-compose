@@ -14,7 +14,7 @@ public class ResponseDto {
 
     public ResponseDto() {
         this.status = HttpStatus.OK;
-        this.message = "Success";
+        this.message = "성공적으로 완료되었습니다.";
     }
 
 }

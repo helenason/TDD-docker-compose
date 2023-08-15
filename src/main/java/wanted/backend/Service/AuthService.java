@@ -32,17 +32,17 @@ public class AuthService {
 
         if (!email.contains("@")) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid email");
+            responseDto.setMessage("이메일 형식을 맞춰주세요.");
             return responseDto;
         }
         if (memberRepository.existsByEmail(email)) {
             responseDto.setStatus(HttpStatus.CONFLICT);
-            responseDto.setMessage("duplicated email"); // TODO not needed?
+            responseDto.setMessage("중복된 이메일입니다.");
             return responseDto;
         }
         if (password.length() < 8) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid password");
+            responseDto.setMessage("비밀번호 조건을 충족해주세요.");
             return responseDto;
         }
 
@@ -68,12 +68,12 @@ public class AuthService {
 
         if (!email.contains("@")) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid email");
+            responseDto.setMessage("이메일 형식을 맞춰주세요.");
             return responseDto;
         }
         if (password.length() < 8) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid password");
+            responseDto.setMessage("비밀번호 조건을 충족해주세요.");
             return responseDto;
         }
 
@@ -81,7 +81,7 @@ public class AuthService {
 
         if (selectedMember == null || !passwordEncoder.matches(password, selectedMember.getPassword())) {
             responseDto.setStatus(HttpStatus.NOT_FOUND);
-            responseDto.setMessage("wrong email or password");
+            responseDto.setMessage("올바른 이메일 혹은 비밀번호를 입력해주세요.");
             return responseDto;
         }
 

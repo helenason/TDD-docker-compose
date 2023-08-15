@@ -33,7 +33,7 @@ public class BoardService {
 
         if (title == null || content == null) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("not enough data");
+            responseDto.setMessage("제목 혹은 내용을 입력해주세요.");
             return responseDto;
         }
 
@@ -80,7 +80,7 @@ public class BoardService {
 
         if (postOp.isEmpty()) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid post");
+            responseDto.setMessage("존재하지 않는 글입니다.");
             return responseDto;
         }
 
@@ -106,7 +106,7 @@ public class BoardService {
 
         if (postOp.isEmpty()) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid post");
+            responseDto.setMessage("존재하지 않는 글입니다.");
             return responseDto;
         }
 
@@ -114,7 +114,7 @@ public class BoardService {
 
         if (!post.getWriter().getId().equals(loginMember.getId())) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("not writer");
+            responseDto.setMessage("해당 글의 작성자가 아닙니다.");
             return responseDto;
         }
 
@@ -133,7 +133,7 @@ public class BoardService {
 
         if (postOp.isEmpty()) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("invalid post");
+            responseDto.setMessage("존재하지 않는 글입니다.");
             return responseDto;
         }
 
@@ -141,7 +141,7 @@ public class BoardService {
 
         if (!post.getWriter().getId().equals(loginMember.getId())) {
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
-            responseDto.setMessage("not writer");
+            responseDto.setMessage("해당 글의 작성자가 아닙니다.");
             return responseDto;
         }
 
