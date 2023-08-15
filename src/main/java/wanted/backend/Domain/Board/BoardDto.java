@@ -30,6 +30,7 @@ public class BoardDto {
         private String content;
         private LocalDateTime date;
         private String writer;
+        private Boolean isUpdated;
 
     }
 }

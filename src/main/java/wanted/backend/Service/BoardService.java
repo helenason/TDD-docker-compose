@@ -92,6 +92,7 @@ public class BoardService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writer(post.getWriter().getEmail())
+                .isUpdated(post.getIsUpdated())
                 .build());
 
         return responseDto;
