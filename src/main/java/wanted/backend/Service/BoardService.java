@@ -120,8 +120,6 @@ public class BoardService {
 
         post.updateBoard(boardDto.getTitle(), boardDto.getContent());
 
-        responseDto.setStatus(HttpStatus.CREATED);
-
         return responseDto;
     }
 
@@ -146,8 +144,6 @@ public class BoardService {
         }
 
         boardRepository.delete(post);
-
-        responseDto.setStatus(HttpStatus.NO_CONTENT);
 
         return responseDto;
     }

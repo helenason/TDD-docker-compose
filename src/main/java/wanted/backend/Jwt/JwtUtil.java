@@ -128,7 +128,7 @@ public class JwtUtil {
 
         ResponseDto responseDto = new ResponseDto();
         responseDto.setStatus(HttpStatus.UNAUTHORIZED);
-        responseDto.setMessage("expired token");
+        responseDto.setMessage("로그인이 필요합니다.");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String result = objectMapper.writeValueAsString(responseDto);
