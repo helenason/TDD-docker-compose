@@ -1,14 +1,41 @@
-# 지원자
+## 지원자
 손채영
-# 실행 방법
+## 어플리케이션 실행 방법
+터미널에서 아래의 명령어를 차례로 입력합니다.
+```
+./gradlew build -x test
+```
+테스트 코드를 제외한 파일을 build하는 명령어입니다.
+```
+docker-compose build
+```
+`Dockerfile`을 build하는 명령어입니다.
+```
+docker-compose up
+```
+`docker-compose.yml`을 실행하여 서버에 접속합니다.
+```
+localhost:8080/{endpoint}
+```
+엔드포인트는 위와 같이 호출하면 됩니다.
+## DB 테이블 구조
+- 구조
+  ![erd.png](img/erd.png)
 
-# DB 테이블 구조
+- 매핑 관계 부연 설명
 
-# API 동작 데모 영상 링크
+  |  테이블1  |  테이블2  |   관계   |
+  |:------:|:-----------:|:------:|
+  | member | refresh_token |  일대일   |
+  | member |     board     |  일대다   |
 
-# 구현 방법 및 이유
+## API 동작 데모 영상 링크
 
-# API 명세
+## 구현 방법 및 이유
+- TDD 방식
+  - 단위 테스트 코드 선구현 후, 해당 테스트를 통과할 수 있도록 메인 코드를 작성하였습니다.
+  - 각 함수의 기능을 빠르게 파악할 수 있으며 테스트 문서 작성에 용이한 방법이라고 생각되었기 때문입니다.
+## API 명세
 | Method |    API URL     |   Request    | Explanation |
 |:------:|:--------------:|:------------:|:-----------:|
 |  POST  |   /auth/join   | RequestBody  |    회원가입     |
@@ -19,8 +46,8 @@
 | PATCH  |  /board/{id}   | PathVariable |    글 수정     |
 | DELETE |  /board/{id}   | PathVariable |    글 삭제     |
 
-## 계정 인증
-### 회원가입 : POST /auth/join
+### 계정 인증
+#### `POST` /auth/join: 회원가입
 - Request
     ```
     {
@@ -63,7 +90,7 @@
           "data": null
       }
       ```
-### 로그인 : POST /auth/login
+#### `POST` /auth/login: 로그인
 - Request
     ```
     {
@@ -84,7 +111,7 @@
           }
       }
       ```
-    ![img.png](img.png)
+      ![cookie.png](img/cookie.png)
   - 실패
     ```
     400 BAD_REQUEST
@@ -110,8 +137,8 @@
         "data": null
     }
     ```
-## 게시판
-### 글 작성 : POST /board
+### 게시판
+#### `POST` /board: 글 작성
 - Request
     ```
     {
@@ -146,13 +173,13 @@
         "data": null
     }
     ```
-### 글 목록 조회 : GET /board
+#### `GET` /board: 글 목록 조회
   - Request
       ```
       /board?page=2
       ```
-    - Response
-      - 성공
+  - Response
+    - 성공
       ```
       200 OK
       {
@@ -182,13 +209,13 @@
           "data": []
       }
       ```
-### 글 상세 조회 : GET /board/{id}
+#### `GET` /board/{id}:  글 상세 조회
 - Request
     ```
     /board/2
     ```
-  - Response
-    - 성공
+- Response
+  - 성공
     ```
     200 OK
     {
@@ -203,7 +230,7 @@
         }
     }
     ```
-    - 실패
+  - 실패
     ```
     400 BAD_REQUEST
     {
@@ -212,53 +239,53 @@
         "data": null
     }
     ```
-### 글 수정 : PATCH /board/{id}
+#### `PATCH` /board/{id}: 글 수정
   - Request
       ```
       /board/2
       ```
-    - Response
+  - Response
       - 성공
-      ```
-      200 OK
-      {
-          "status": "OK",
-          "message": "성공적으로 완료되었습니다.",
-          "data": null
-      }
-      ```
+        ```
+        200 OK
+        {
+            "status": "OK",
+            "message": "성공적으로 완료되었습니다.",
+            "data": null
+        }
+        ```
       - 실패
-      ```
-      400 BAD_REQUEST
-      {
-          "status": "BAD_REQUEST",
-          "message": "존재하지 않는 글입니다.",
-          "data": null
-      }
-      ```
-      ```
-      400 BAD_REQUEST
-      {
-          "status": "BAD_REQUEST",
-          "message": "해당 글의 작성자가 아닙니다.",
-          "data": null
-      }
-      ```
-      ```
-      401 UNAUTHORIZED
-      {
-          "status": "UNAUTHORIZED",
-          "message": "로그인이 필요합니다.",
-          "data": null
-      }
-      ```
-### 글 삭제 : DELETE /board/{id}
+        ```
+        400 BAD_REQUEST
+        {
+            "status": "BAD_REQUEST",
+            "message": "존재하지 않는 글입니다.",
+            "data": null
+        }
+        ```
+        ```
+        400 BAD_REQUEST
+        {
+            "status": "BAD_REQUEST",
+            "message": "해당 글의 작성자가 아닙니다.",
+            "data": null
+        }
+        ```
+        ```
+        401 UNAUTHORIZED
+        {
+            "status": "UNAUTHORIZED",
+            "message": "로그인이 필요합니다.",
+            "data": null
+        }
+        ```
+#### `DELETE` /board/{id}: 글 삭제
 - Request
     ```
     /board/2
     ```
-  - Response
-    - 성공
+- Response 
+  - 성공
     ```
     200 OK
     {
@@ -267,7 +294,7 @@
         "data": null
     }
     ```
-    - 실패
+  - 실패
     ```
     400 BAD_REQUEST
     {
