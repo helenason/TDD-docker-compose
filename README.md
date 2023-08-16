@@ -191,35 +191,36 @@ https://youtu.be/ozxdfUlagWY
       ```
   - Response
     - 성공
-      ```
-      200 OK
-      {
-          "status": "OK",
-          "message": "성공적으로 완료되었습니다.",
-          "data": [
-              {
-                  "id": 2,
-                  "title": "title2",
-                  "date": "2023-08-15T20:24:46.313729",
-                  "writer": "test@naver.com"
-              },
-              {
-                  "id": 1,
-                  "title": "title1",
-                  "date": "2023-08-15T20:23:32.527841",
-                  "writer": "test@naver.com"
-              }
-          ]
-      }
-      ```
-      ```
-      200 OK
-      {
-          "status": "OK",
-          "message": "성공적으로 완료되었습니다.",
-          "data": []
-      }
-      ```
+      <br>(글 다섯 개씩 페이지네이션)
+        ```
+        200 OK
+        {
+            "status": "OK",
+            "message": "성공적으로 완료되었습니다.",
+            "data": [
+                {
+                    "id": 2,
+                    "title": "title2",
+                    "date": "2023-08-15T20:24:46.313729",
+                    "writer": "test@naver.com"
+                },
+                {
+                    "id": 1,
+                    "title": "title1",
+                    "date": "2023-08-15T20:23:32.527841",
+                    "writer": "test@naver.com"
+                }
+            ]
+        }
+        ```
+        ```
+        200 OK
+        {
+            "status": "OK",
+            "message": "성공적으로 완료되었습니다.",
+            "data": []
+        }
+        ```
 #### `GET` /board/{id}:  글 상세 조회
 - Request
     ```
