@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import wanted.backend.Domain.Member.AuthDto;
 import wanted.backend.Domain.Member.Member;
 import wanted.backend.Domain.Token.TokenDto;
@@ -50,8 +53,15 @@ public class AuthTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private WebApplicationContext ctx;
+
     @BeforeEach
     void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .build();
+
         boardRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         memberRepository.deleteAll();
@@ -78,7 +88,7 @@ public class AuthTest {
 
         ResponseDto responseDto = authService.joinMember(authDto);
 
-        Assertions.assertEquals(responseDto.getMessage(), "invalid email");
+        Assertions.assertEquals(responseDto.getMessage(), "이메일 형식을 맞춰주세요.");
         Assertions.assertEquals(memberRepository.count(), 0);
     }
 
@@ -90,7 +100,7 @@ public class AuthTest {
 
         ResponseDto responseDto = authService.joinMember(authDto);
 
-        Assertions.assertEquals(responseDto.getMessage(), "invalid password");
+        Assertions.assertEquals(responseDto.getMessage(), "비밀번호 조건을 충족해주세요.");
         Assertions.assertEquals(memberRepository.count(), 0);
     }
 
@@ -164,7 +174,7 @@ public class AuthTest {
         // then
         String content = result.getResponse().getContentAsString();
         String message = objectMapper.readValue(content, ResponseDto.class).getMessage();
-        Assertions.assertEquals(message, "invalid email");
+        Assertions.assertEquals(message, "이메일 형식을 맞춰주세요.");
     }
     @Test
     @DisplayName("로그인 - 유효하지 않은 비밀번호")
@@ -187,7 +197,7 @@ public class AuthTest {
         // then
         String content = result.getResponse().getContentAsString();
         String message = objectMapper.readValue(content, ResponseDto.class).getMessage();
-        Assertions.assertEquals(message, "invalid password");
+        Assertions.assertEquals(message, "비밀번호 조건을 충족해주세요.");
     }
 
     @Test
@@ -211,6 +221,6 @@ public class AuthTest {
         // then
         String content = result.getResponse().getContentAsString();
         String message = objectMapper.readValue(content, ResponseDto.class).getMessage();
-        Assertions.assertEquals(message, "wrong email or password");
+        Assertions.assertEquals(message, "올바른 이메일 혹은 비밀번호를 입력해주세요.");
     }
 }

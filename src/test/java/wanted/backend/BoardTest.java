@@ -157,7 +157,7 @@ public class BoardTest {
 
         // then
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
-        Assertions.assertEquals(responseDto.getMessage(), "invalid post");
+        Assertions.assertEquals(responseDto.getMessage(), "존재하지 않는 글입니다.");
     }
 
     @Test
@@ -174,7 +174,7 @@ public class BoardTest {
         ResponseDto responseDto = boardService.updatePost(postId, updateDto, loginMember);
 
         // then
-        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.CREATED);
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.OK);
         Assertions.assertEquals(boardRepository.findById(postId).get().getTitle(), "수정 제목");
         Assertions.assertEquals(boardRepository.findById(postId).get().getContent(), "수정 내용");
     }
@@ -201,7 +201,7 @@ public class BoardTest {
 
         // then
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
-        Assertions.assertEquals(responseDto.getMessage(), "not writer");
+        Assertions.assertEquals(responseDto.getMessage(), "해당 글의 작성자가 아닙니다.");
     }
 
     @Test
@@ -217,7 +217,7 @@ public class BoardTest {
         ResponseDto responseDto = boardService.deletePost(postId, loginMember);
 
         // then
-        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.NO_CONTENT);
+        Assertions.assertEquals(responseDto.getStatus(), HttpStatus.OK);
         Assertions.assertEquals(boardRepository.count(), 0);
     }
 
@@ -241,6 +241,6 @@ public class BoardTest {
 
         // then
         Assertions.assertEquals(responseDto.getStatus(), HttpStatus.BAD_REQUEST);
-        Assertions.assertEquals(responseDto.getMessage(), "not writer");
+        Assertions.assertEquals(responseDto.getMessage(), "해당 글의 작성자가 아닙니다.");
     }
 }
