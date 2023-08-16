@@ -2,7 +2,7 @@ package wanted.backend.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import wanted.backend.Domain.Member.Member;
-import wanted.backend.Domain.Member.RefreshToken;
+import wanted.backend.Domain.Token.RefreshToken;
 
 import java.util.Optional;
 

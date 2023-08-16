@@ -1,4 +1,4 @@
-package wanted.backend.Domain.Member;
+package wanted.backend.Domain.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

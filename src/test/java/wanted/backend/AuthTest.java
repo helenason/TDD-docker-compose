@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import wanted.backend.Domain.Member.AuthDto;
 import wanted.backend.Domain.Member.Member;
-import wanted.backend.Domain.Member.TokenDto;
+import wanted.backend.Domain.Token.TokenDto;
 import wanted.backend.Domain.ResponseDto;
 import wanted.backend.Jwt.JwtUtil;
 import wanted.backend.Repository.BoardRepository;

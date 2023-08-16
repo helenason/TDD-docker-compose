@@ -1,9 +1,10 @@
-package wanted.backend.Domain.Member;
+package wanted.backend.Domain.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import wanted.backend.Domain.Member.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
