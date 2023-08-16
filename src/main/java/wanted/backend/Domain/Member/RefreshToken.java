@@ -19,9 +19,9 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(unique = true)
-    private String email;
+    @OneToOne
+    @JoinColumn(name = "member")
+    private Member member;
 
     @NotNull
     private String token;

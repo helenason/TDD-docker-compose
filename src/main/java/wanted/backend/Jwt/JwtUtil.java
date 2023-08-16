@@ -9,9 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import wanted.backend.Domain.Member.Member;
 import wanted.backend.Domain.Member.RefreshToken;
 import wanted.backend.Domain.Member.TokenDto;
 import wanted.backend.Domain.ResponseDto;
+import wanted.backend.Repository.MemberRepository;
 import wanted.backend.Repository.RefreshTokenRepository;
 
 import javax.servlet.http.Cookie;
@@ -32,6 +34,7 @@ public class JwtUtil {
     private static final Long expired_access = 1000 * 60 * 60L; // 1 hour
     private static final Long expired_refresh = 1000 * 60 * 60 * 24 * 15L; // 15 day
 
+    private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     public String getEmailFromToken(String token) {
@@ -56,7 +59,8 @@ public class JwtUtil {
 
         String email = getEmailFromToken(token);
 
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByMember(member);
 
         return refreshToken.isPresent() && token.equals(refreshToken.get().getToken());
     }

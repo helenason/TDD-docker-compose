@@ -77,9 +77,9 @@ public class AuthService {
             return responseDto;
         }
 
-        Member selectedMember = memberRepository.findByEmail(email).orElse(null);
+        Member member = memberRepository.findByEmail(email).orElse(null);
 
-        if (selectedMember == null || !passwordEncoder.matches(password, selectedMember.getPassword())) {
+        if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
             responseDto.setStatus(HttpStatus.NOT_FOUND);
             responseDto.setMessage("올바른 이메일 혹은 비밀번호를 입력해주세요.");
             return responseDto;
@@ -87,7 +87,7 @@ public class AuthService {
 
         TokenDto newTokenDto = jwtUtil.createAllToken(email);
 
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByEmail(email);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByMember(member);
 
         if (refreshToken.isPresent()) { // 존재
 
@@ -97,8 +97,8 @@ public class AuthService {
 
             refreshTokenRepository.save(
                     RefreshToken.builder()
+                            .member(member)
                             .token(newTokenDto.getRefreshToken())
-                            .email(email)
                             .build());
         }
 
