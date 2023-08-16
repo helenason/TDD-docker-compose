@@ -2,22 +2,24 @@
 손채영
 ## 어플리케이션 실행 방법
 터미널에서 아래의 명령어를 차례로 입력합니다.
+<br>
+<br>
+1. 테스트 코드를 제외한 파일을 build 하는 명령어입니다.  
 ```
 ./gradlew build -x test
 ```
-테스트 코드를 제외한 파일을 build하는 명령어입니다.
+2. `Dockerfile`을 build 하는 명령어입니다.
 ```
 docker-compose build
 ```
-`Dockerfile`을 build하는 명령어입니다.
+3. `docker-compose.yml`을 실행하여 서버에 접속합니다.
 ```
 docker-compose up
 ```
-`docker-compose.yml`을 실행하여 서버에 접속합니다.
+엔드포인트는 아래와 같이 호출하면 됩니다.
 ```
 localhost:8080/{endpoint}
 ```
-엔드포인트는 위와 같이 호출하면 됩니다.
 ## DB 테이블 구조
 - 구조
   ![erd.png](img/erd.png)
@@ -30,10 +32,10 @@ localhost:8080/{endpoint}
   | member |     board     |  일대다   |
 
 ## API 동작 데모 영상 링크
-
+https://youtu.be/ozxdfUlagWY
 ## 구현 방법 및 이유
 - TDD 방식
-  - 단위 테스트 코드 선구현 후, 해당 테스트를 통과할 수 있도록 메인 코드를 작성하였습니다.
+  - 단위 테스트 코드 선구현 후, 해당 테스트를 기준으로 메인 코드를 작성하였습니다.
   - 각 함수의 기능을 빠르게 파악할 수 있으며 테스트 문서 작성에 용이한 방법이라고 생각되었기 때문입니다.
 ## API 명세
 | Method |    API URL     |   Request    | Explanation |
@@ -49,6 +51,9 @@ localhost:8080/{endpoint}
 ### 계정 인증
 #### `POST` /auth/join: 회원가입
 - Request
+    ```
+    localhost:8080/auth/join
+    ```
     ```
     {
         "email" : "test@naver.com",
@@ -92,6 +97,9 @@ localhost:8080/{endpoint}
       ```
 #### `POST` /auth/login: 로그인
 - Request
+    ```
+    localhost:8080/auth/login
+    ```
     ```
     {
         "email" : "test@naver.com",
@@ -141,6 +149,9 @@ localhost:8080/{endpoint}
 #### `POST` /board: 글 작성
 - Request
     ```
+    localhost:8080/board
+    ```
+    ```
     {
         "title" : "title123",
         "content" : "content123"
@@ -176,7 +187,7 @@ localhost:8080/{endpoint}
 #### `GET` /board: 글 목록 조회
   - Request
       ```
-      /board?page=2
+      localhost:8080/board?page=2
       ```
   - Response
     - 성공
@@ -212,7 +223,7 @@ localhost:8080/{endpoint}
 #### `GET` /board/{id}:  글 상세 조회
 - Request
     ```
-    /board/2
+    localhost:8080/board/2
     ```
 - Response
   - 성공
@@ -242,7 +253,7 @@ localhost:8080/{endpoint}
 #### `PATCH` /board/{id}: 글 수정
   - Request
       ```
-      /board/2
+      localhost:8080/board/2
       ```
   - Response
       - 성공
@@ -282,7 +293,7 @@ localhost:8080/{endpoint}
 #### `DELETE` /board/{id}: 글 삭제
 - Request
     ```
-    /board/2
+    localhost:8080/board/2
     ```
 - Response 
   - 성공
