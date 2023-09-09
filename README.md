@@ -1,21 +1,19 @@
-# Docker-compose practice with CRUD project
+# TDD and docker-compose practice with CRUD project
+**TDD** 방식과 **docker-compose** 배포를 위한 간단한 CRUD 프로젝트입니다.
 ## 어플리케이션 실행 방법
-터미널에서 아래의 명령어를 차례로 입력합니다.
-<br>
-<br>
-1. 테스트 코드를 제외한 파일을 build 하는 명령어입니다.  
+1. 테스트 코드 외 파일 build
 ```
 ./gradlew build -x test
 ```
-2. `Dockerfile`을 build 하는 명령어입니다.
+2. `Dockerfile` build
 ```
 docker-compose build
 ```
-3. `docker-compose.yml`을 실행하여 서버에 접속합니다.
+3. `docker-compose.yml` 실행을 통해 서버 접속
 ```
 docker-compose up
 ```
-엔드포인트는 아래와 같이 호출하면 됩니다.
+엔드포인트는 아래와 같이 호출
 ```
 localhost:8080/{endpoint}
 ```
